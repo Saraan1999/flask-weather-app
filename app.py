@@ -31,28 +31,28 @@ def index():
     <head>
         <title>Weather App</title>
         <style>
-            body {{
+            body {
                 font-family: Arial, sans-serif;
                 text-align: center;
                 margin: 50px;
                 background-color: #f0f8ff;
-            }}
-            h1 {{
+            }
+            h1 {
                 color: #333;
-            }}
-            input, button {{
+            }
+            input, button {
                 padding: 10px;
                 margin: 5px;
                 font-size: 16px;
-            }}
-            .weather-container {{
+            }
+            .weather-container {
                 margin-top: 20px;
                 padding: 15px;
                 border-radius: 10px;
                 background: #fff;
                 display: inline-block;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            }}
+            }
         </style>
     </head>
     <body>
@@ -62,27 +62,23 @@ def index():
             <button type="submit">Get Weather</button>
         </form>
 
-        {weather_block}
+        {% if weather_data %}
+        <div class="weather-container">
+            <h2>Weather in {{ weather_data.name }}</h2>
+            <p><strong>Temperature:</strong> {{ weather_data.main.temp }}°C</p>
+            <p><strong>Humidity:</strong> {{ weather_data.main.humidity }}%</p>
+            <p><strong>Condition:</strong> {{ weather_data.weather[0].description }}</p>
+        </div>
+        {% endif %}
 
-        {error_block}
+        {% if error_message %}
+        <p style="color:red;">{{ error_message }}</p>
+        {% endif %}
     </body>
     </html>
     """
 
-    weather_block = ""
-    if weather_data and "main" in weather_data:
-        weather_block = f"""
-        <div class="weather-container">
-            <h2>Weather in {weather_data["name"]}</h2>
-            <p><strong>Temperature:</strong> {weather_data["main"]["temp"]}°C</p>
-            <p><strong>Humidity:</strong> {weather_data["main"]["humidity"]}%</p>
-            <p><strong>Condition:</strong> {weather_data["weather"][0]["description"]}</p>
-        </div>
-        """
-
-    error_block = f'<p style="color:red;">{error_message}</p>' if error_message else ""
-
-    return render_template_string(html_template, weather_block=weather_block, error_block=error_block)
+    return render_template_string(html_template, weather_data=weather_data, error_message=error_message)
 
 # ✅ Run the Flask app
 if __name__ == "__main__":
